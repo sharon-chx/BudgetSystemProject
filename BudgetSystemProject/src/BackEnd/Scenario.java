@@ -58,10 +58,14 @@ public class Scenario {
 	public boolean updateRevAcct(int account, String clientName, String media, BigDecimal[] amounts) {
 		
 		// check invalid inputs
-		if (clientName == null || media == null || amounts == null)
+		if (clientName == null || media == null || amounts == null || account <6000 || account >=7000)
 			return false;
 		
 		// if acct not exist, add acct
+		if (!this.revAccts.containsKey(account)) this.revAccts.put(account, new RevAcct(account)); 
+		
+		// Get the rev acct
+		RevAcct acct = this.revAccts.get(account);
 		
 		// if client not exists, add client with amts
 		
