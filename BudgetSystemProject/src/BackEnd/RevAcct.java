@@ -16,13 +16,13 @@ public class RevAcct {
 	public BigDecimal[] amounts;
 	
 	// hash table of Clients
-	private Hashtable<String, Client> clients;
+	public Hashtable<String, Client> clients;
 	
 	
 	/*
 	 * constructor
 	 */
-	protected RevAcct(int number) {
+	public RevAcct(int number) {
 		
 		this.number = number;
 		this.amounts = new BigDecimal[13];

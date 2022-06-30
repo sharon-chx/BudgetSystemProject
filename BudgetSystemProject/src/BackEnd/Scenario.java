@@ -68,6 +68,7 @@ public class Scenario {
 		RevAcct acct = this.revAccts.get(account);
 		
 		// if client not exists, add client with amts
+		if (!acct.clients.containsKey(clientName)) acct.clients.put(clientName, new Client(clientName));
 		
 		// otherwise, update info
 		
