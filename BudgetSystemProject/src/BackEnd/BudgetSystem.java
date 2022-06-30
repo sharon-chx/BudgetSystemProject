@@ -31,21 +31,21 @@ public class BudgetSystem {
 	public static HashSet<String> mediaTypes = new HashSet<String>();
 	
 	// hash table of default Rev Accounts
-	public static Hashtable <Integer, RevAcct> defaultRevAccts = new Hashtable <Integer, RevAcct>();
+	public static HashSet <Integer> defaultRevAccts = new HashSet<Integer>();
 	
 	// hash table of default Exp Accounts
-	public static Hashtable <Integer, ExpAcct> defaultExpAccts = new Hashtable <Integer, ExpAcct>();
+	public static HashSet <Integer> defaultExpAccts = new HashSet <Integer>();
 	
 	// set up static variables default accounts and categories
     static {
         
         // set up default accounts
-        defaultRevAccts.put(6000, new RevAcct(6000));   // rev account for disclosed clients
-        defaultRevAccts.put(6195, new RevAcct(6195));	// rev account for non-disclosed clients
-        defaultExpAccts.put(7000, new ExpAcct(7000));  // base salary account
-        defaultExpAccts.put(7150, new ExpAcct(7150));	// benefit account
-        defaultExpAccts.put(7240, new ExpAcct(7240));	// Lodge expense account
-        defaultExpAccts.put(7350, new ExpAcct(7350));	// Airfare expense account
+        defaultRevAccts.add(6000);   // rev account for disclosed clients
+        defaultRevAccts.add(6195);	// rev account for non-disclosed clients
+        defaultExpAccts.add(7000);  // base salary account
+        defaultExpAccts.add(7150);	// benefit account
+        defaultExpAccts.add(7240);	// Lodge expense account
+        defaultExpAccts.add(7350);	// Airfare expense account
         
         // set up media types
         mediaTypes.add("display");

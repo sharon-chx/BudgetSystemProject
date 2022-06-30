@@ -2,6 +2,11 @@ package BackEnd;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -38,8 +43,50 @@ class ScenarioTest {
 		
 		// test
 		assertTrue(s1.updateRevAcct(6000, "ALDI", "DISPLAY", amounts));
-		System.out.println(s1.revAccts.get(6000).clients.get("ALDI").printAmt());
-		System.out.println(s2.revAccts.get(6000).clients.get("ALDI").printAmt());
+		//System.out.println(s1.revAccts.get(6000).clients.get("aldi").printAmt());
+		
+		assertTrue(s2.updateRevAcct(6000, "BMW", "video", amounts));
+		//System.out.println(s2.revAccts.get(6000).clients.get("bmw").printAmt());
+		
+	}
+	
+	
+	@Test
+	void testReadRevRow() throws IOException {
+		File f = new File("test - copy.csv");
+		FileReader fr = new FileReader(f);
+		BufferedReader br = new BufferedReader(fr);
+		
+		String[] result = s1.readRevRow(br);
+		for (int i= 0; i < result.length - 1; i++) {
+			String text = result[i];
+			if (text == null ) text = "null";
+			else text = text.toString();
+			System.out.print(text + ", ");
+		}
+		System.out.print(result[result.length-1].toString());
+		System.out.println();
+		System.out.println();
+	}
+	
+	
+	@Test
+	void testUpload() {
+		File f = new File("test.csv");
+		
+		s1.upload(f);
+		
+		for (RevAcct revAcct: s1.revAccts.values()) {
+			System.out.println(revAcct.number);
+			for (Client c: revAcct.clients.values()) {
+				System.out.println(c.name);
+				System.out.println(c.printAmt());
+			}
+		}
+		
+		//System.out.println(s1.revAccts.get(6000).clients.get("aldi").printAmt());
+		//System.out.println(s1.revAccts.get(6000).clients.get("bmw").printAmt());
+		//System.out.println(s1.revAccts.get(6195).clients.get("bmw").printAmt());
 	}
 
 }
