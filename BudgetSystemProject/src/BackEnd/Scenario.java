@@ -70,7 +70,11 @@ public class Scenario {
 		// if client not exists, add client with amts
 		if (!acct.clients.containsKey(clientName)) acct.clients.put(clientName, new Client(clientName));
 		
+		// Get the Client
+		Client client = acct.clients.get(clientName);
+		
 		// otherwise, update info
+		client.updateMedia(media, amounts);
 		
 		return true;
 		
