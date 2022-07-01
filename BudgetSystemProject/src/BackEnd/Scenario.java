@@ -98,9 +98,9 @@ public class Scenario {
 	
 	
 	/*
-	 * read one row of given buffered reader for updating Rev Acct
+	 * read one row of given buffered reader
 	 */
-	public String[] readRevRow(BufferedReader reader) throws IOException {
+	public String[] readRow(BufferedReader reader) throws IOException {
 		
 		ArrayList<String> line = new ArrayList<>();
 		String word = "";
@@ -184,21 +184,22 @@ public class Scenario {
 			// loop till reach end of file
 			while (br.ready()) {
 				
-				String[] line = this.readRevRow(br);
+				String[] line = this.readRow(br);
 				rowCount++;
 				int account = Integer.parseInt(line[0]);
 				
-				BigDecimal[] amts = new BigDecimal[13];
-				BigDecimal total = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
-				for (int i=0; i<12; i++) {
-					amts[i] = new BigDecimal(line[i+3]).setScale(2, RoundingMode.HALF_UP);
-					total = total.add(amts[i]);
-				}
-				amts[12] = total;
-				
 				// if it's a rev acct
-				if (account < 7000 ) {
-					if (account == 0 || line[1] == null || line[2] == null) {
+				if (account < 7000 && account >= 600) {
+					
+					BigDecimal[] amts = new BigDecimal[13];
+					BigDecimal total = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+					for (int i=0; i<12; i++) {
+						amts[i] = new BigDecimal(line[i+3]).setScale(2, RoundingMode.HALF_UP);
+						total = total.add(amts[i]);
+					}
+					amts[12] = total;
+					
+					if (line[1] == null || line[2] == null) {
 						errorRows.add(rowCount);
 					}else {
 						updateRevAcct(account, line[1], line[2], amts);	
@@ -206,19 +207,30 @@ public class Scenario {
 				}
 				
 				// if it's a expense acct
-				else {
-					if (account == 0 || line[1] == null || line[2] == null) {
+				else if (account >= 7000 && account < 8000){
+					
+					BigDecimal[] amts = new BigDecimal[13];
+					BigDecimal total = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+					for (int i=0; i<12; i++) {
+						
+						if (line[i+2] == null) line[i+2] = "0";
+						
+						amts[i] = new BigDecimal(line[i+2]).setScale(2, RoundingMode.HALF_UP);
+						total = total.add(amts[i]);
+					}
+					amts[12] = total;
+					
+					if (line[1] == null) {
 						errorRows.add(rowCount);
-					}else {
+					}else {	
 						updateExpAcct(account, line[1], amts);	
 					}
 				}
 				
-			}
-			
-			
-			
+				else errorRows.add(rowCount);
+			}	
 		} catch (Exception e) {
+			System.out.println(e);
 			return "Something went wrong when try opening the file";
 		}
 		
@@ -248,7 +260,8 @@ public class Scenario {
 		// Get the rev acct
 		ExpAcct acct = this.expAccts.get(account);
 		
-		// TO DO
+		// Update the exp acct
+		acct.update(note, amounts);
 		
 		// recalculate totals of the Rev Acct
 		acct.calculateTotal();

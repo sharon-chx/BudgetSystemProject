@@ -50,12 +50,24 @@ public class UploadFrame extends Frame{
         			// get the String of row numbers that have errors
         			String result = s.upload(filePath);
         			
-        			if (result == "") new SuccessFrame(bs);
-        			else new FailFrame(bs, "Rows " + result + "can't be uploaded due to input errors. Other rows were uploaded successfully");
+        			if (result == "") {
+        				frame.dispose();
+        				new SuccessFrame(bs);
+        			}
+        			else {
+        				frame.dispose();
+        				new FailFrame(bs, "Rows " + result + "can't be uploaded due to input errors. Other rows were uploaded successfully");
+        			}
         		}
-        		else new FailFrame(bs, "The file you uploaded was not a CSV file.");
+        		else {
+        			frame.dispose();
+        			new FailFrame(bs, "The file you uploaded was not a CSV file.");
+        		}
         	}
-        	else new FailFrame(bs);
+        	else {
+        		frame.dispose();
+        		new FailFrame(bs);
+        	}
         }
     }
 

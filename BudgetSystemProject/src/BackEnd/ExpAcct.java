@@ -3,6 +3,7 @@ package BackEnd;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 
 public class ExpAcct {
 	
@@ -38,9 +39,75 @@ public class ExpAcct {
 	}
 
 
+	/*
+	 * Recalculate total of the Account
+	 */
 	public void calculateTotal() {
-		// TODO Auto-generated method stub
+		
+		// reset the totals
+		for (int i = 0; i < 13; i++) {
+			amounts[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		}
+				
+		for (BigDecimal[] item: items) {
+			
+			for (int i = 0; i < 13; i++) {	
+	
+				amounts[i] = amounts[i].add(item[i]);
+			}
+		}
 		
 	}
+
+	
+	/*
+	 * Update/add the note and corresponding amts
+	 */
+	public boolean update(String note, BigDecimal[] amounts) {
+		
+		if (note == null || amounts == null) return false;
+		
+		note = note.toLowerCase();
+		
+		int noteIndex = notes.indexOf(note);
+		
+		if ( noteIndex != -1) items.set(noteIndex, amounts);
+		
+		else {
+			notes.add(note);
+			items.add(amounts);
+		}
+		
+		return true;
+		
+	}
+	
+	
+	/*
+	 * Print amounts of line items
+	 */
+	
+	public String printAmt() {
+		
+		String result = "";
+		
+		for (int i = 0; i < items.size(); i++) {
+			
+			String amt = "";
+			
+			for (int j = 0; j < 13; j++) {
+				amt = amt + items.get(i)[j] + ", ";
+			}
+
+			result = result + notes.get(i) + ", " + amt;
+			
+			// a new line
+			result = result + "\n";
+		}
+		
+		return result;
+	}
+
+
 
 }

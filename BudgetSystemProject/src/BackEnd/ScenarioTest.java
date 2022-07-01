@@ -52,12 +52,12 @@ class ScenarioTest {
 	
 	
 	@Test
-	void testReadRevRow() throws IOException {
+	void testReadRow() throws IOException {
 		File f = new File("test - copy.csv");
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
 		
-		String[] result = s1.readRevRow(br);
+		String[] result = s1.readRow(br);
 		for (int i= 0; i < result.length - 1; i++) {
 			String text = result[i];
 			if (text == null ) text = "null";
@@ -72,6 +72,8 @@ class ScenarioTest {
 	
 	@Test
 	void testUpload() {
+		
+		// test upload on rev acct
 		File f = new File("test.csv");
 		
 		System.out.println(s1.upload(f));
@@ -94,6 +96,18 @@ class ScenarioTest {
 		//System.out.println(s1.revAccts.get(6000).clients.get("aldi").printAmt());
 		//System.out.println(s1.revAccts.get(6000).clients.get("bmw").printAmt());
 		//System.out.println(s1.revAccts.get(6195).clients.get("bmw").printAmt());
+		
+		
+		// test upload on exp acct
+		File f1 = new File("test_copy.csv");
+		
+		System.out.println(s1.upload(f1));
+		
+		for (ExpAcct expAcct: s1.expAccts.values()) {
+			System.out.println(expAcct.number);
+			System.out.println(expAcct.printAmt());
+		}
+		
 	}
 
 }
