@@ -37,4 +37,10 @@ public class ExpAcct {
 		}
 	}
 
+
+	public void calculateTotal() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

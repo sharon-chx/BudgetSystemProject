@@ -17,6 +17,9 @@ public class Client {
 	// hash table - key is the media type, value is the int[13] for monthly revenue amount
 	public Hashtable<String, BigDecimal[]> amounts;
 	
+	// list of totals of the Client
+	public BigDecimal[] totals;
+	
 	
 	/*
 	 * Constructor
@@ -26,6 +29,8 @@ public class Client {
 		this.name = name.toLowerCase();
 
 		this.amounts = new Hashtable<String, BigDecimal[]>();
+		
+		this.totals = new BigDecimal[13];
 		
 		// initiate amounts variable with medias and 0 monthly amount
 		for (String media: BudgetSystem.mediaTypes) {
@@ -38,6 +43,7 @@ public class Client {
 			
 			this.amounts.put(media, amt);
 		}
+		
 	}
 
 
@@ -55,6 +61,8 @@ public class Client {
 		media = media.toLowerCase();
 		
 		this.amounts.put(media, amounts);
+		
+		this.calculateTotal();
 		
 		return true;
 		
@@ -85,6 +93,24 @@ public class Client {
 	}
 
 
+	/*
+	 * Calculate the total of the client
+	 */
+	public void calculateTotal() {
+		
+		for (int i = 0; i < 13; i++) {
+			
+			// initiate the totals
+			totals[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+			
+			for (BigDecimal[] amt: amounts.values()) {
+				if (amt[i] == null) amt[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+					totals[i] = totals[i].add(amt[i]);
+			}
+		}
+		
+	}
+	
 
 
 }

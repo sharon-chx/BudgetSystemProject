@@ -40,7 +40,7 @@ class ClientTest {
 		
 		System.out.println(client.printAmt());
 		
-		// add and update new media type
+		// test 2: add and update new media type
 		double[] amt2 = {1.01, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 78.01};
 		BigDecimal[] amounts2 = new BigDecimal[13];
 		
@@ -51,6 +51,10 @@ class ClientTest {
 		client.updateMedia("SERACH", amounts);
 		
 		System.out.println(client.printAmt());
+		
+		for (int i = 0; i < 13; i++) {
+			System.out.print(client.totals[i] + ", ");
+		}
 		
 	}
 

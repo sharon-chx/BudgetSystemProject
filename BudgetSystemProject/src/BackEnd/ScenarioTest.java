@@ -74,7 +74,7 @@ class ScenarioTest {
 	void testUpload() {
 		File f = new File("test.csv");
 		
-		s1.upload(f);
+		System.out.println(s1.upload(f));
 		
 		for (RevAcct revAcct: s1.revAccts.values()) {
 			System.out.println(revAcct.number);
@@ -82,7 +82,14 @@ class ScenarioTest {
 				System.out.println(c.name);
 				System.out.println(c.printAmt());
 			}
+			
+			for (int i = 0; i < 13; i++) {
+				System.out.print(revAcct.amounts[i] + ", ");
+			}
+			System.out.println();
+			System.out.println();
 		}
+		
 		
 		//System.out.println(s1.revAccts.get(6000).clients.get("aldi").printAmt());
 		//System.out.println(s1.revAccts.get(6000).clients.get("bmw").printAmt());

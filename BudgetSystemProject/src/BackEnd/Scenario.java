@@ -90,12 +90,15 @@ public class Scenario {
 		// otherwise, update info
 		client.updateMedia(media, amounts);
 		
+		// recalculate totals of the Rev Acct
+		acct.calculateTotal();
+		
 		return true;	
 	}
 	
 	
 	/*
-	 * read one row of given buffered reader
+	 * read one row of given buffered reader for updating Rev Acct
 	 */
 	public String[] readRevRow(BufferedReader reader) throws IOException {
 		
@@ -163,10 +166,12 @@ public class Scenario {
 	 * Return the row numbers that error incurred
 	 * If no error, return empty list
 	 */
-	public int[] upload(File filePath) {
+	public String upload(File filePath) {
 		
 		FileReader fr;
 		BufferedReader br;
+		int rowCount = 0;
+		ArrayList<Integer> errorRows = new ArrayList<Integer>();
 		
 		try {
 			fr = new FileReader(filePath);
@@ -174,10 +179,13 @@ public class Scenario {
 			
 			// skip the first line - the column name, and start to read the second line
 			br.readLine();
+			rowCount++;
 			
-			while (br != null) {
+			// loop till reach end of file
+			while (br.ready()) {
 				
 				String[] line = this.readRevRow(br);
+				rowCount++;
 				int account = Integer.parseInt(line[0]);
 				
 				BigDecimal[] amts = new BigDecimal[13];
@@ -190,12 +198,20 @@ public class Scenario {
 				
 				// if it's a rev acct
 				if (account < 7000 ) {
-					updateRevAcct(account, line[1], line[2], amts);	
+					if (account == 0 || line[1] == null || line[2] == null) {
+						errorRows.add(rowCount);
+					}else {
+						updateRevAcct(account, line[1], line[2], amts);	
+					}
 				}
 				
 				// if it's a expense acct
 				else {
-					continue;
+					if (account == 0 || line[1] == null || line[2] == null) {
+						errorRows.add(rowCount);
+					}else {
+						updateExpAcct(account, line[1], amts);	
+					}
 				}
 				
 			}
@@ -203,10 +219,42 @@ public class Scenario {
 			
 			
 		} catch (Exception e) {
-			return false;
+			return "Something went wrong when try opening the file";
 		}
 		
+		String result = "";
+		for (int i : errorRows) {
+			result = result + i + " ";
+		}
+		
+		return result;
+	}
+
+
+	/*
+	 * Update the Exp Acct by given acct number, note, and monthly amts
+	 */
+	private boolean updateExpAcct(int account, String note, BigDecimal[] amounts) {
+		
+		// check invalid inputs
+		if ( note == null || amounts == null || account >= 8000 || account <7000)
+			return false;
+		
+		note = note.toLowerCase();
+		
+		// if acct not exist, add acct
+		if (!this.expAccts.containsKey(account)) this.expAccts.put(account, new ExpAcct(account)); 
+		
+		// Get the rev acct
+		ExpAcct acct = this.expAccts.get(account);
+		
+		// TO DO
+		
+		// recalculate totals of the Rev Acct
+		acct.calculateTotal();
+		
 		return true;
+		
 	}
 	
 	

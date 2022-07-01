@@ -28,8 +28,8 @@ public class UploadFrame extends Frame{
 	
 	
 	
-	public void actionPerformed(ActionEvent e)
-    {
+	public void actionPerformed(ActionEvent e){
+		
         if (e.getSource() == button) {
         	
         	// set up JFileChooser to choose file to upload
@@ -47,14 +47,15 @@ public class UploadFrame extends Frame{
         		if ( (pathName != null ) && (pathName.length() > 4) 
         				&& (pathName.substring(pathName.length() - 4).toLowerCase().equals(".csv")) ) {
         			
-        			boolean result = s.upload(filePath);
+        			// get the String of row numbers that have errors
+        			String result = s.upload(filePath);
         			
-        			// if (result == true) new SuccessFrame(bs);
+        			if (result == "") new SuccessFrame(bs);
+        			else new FailFrame(bs, "Rows " + result + "can't be uploaded due to input errors. Other rows were uploaded successfully");
         		}
         		else new FailFrame(bs, "The file you uploaded was not a CSV file.");
         	}
         	else new FailFrame(bs);
-        	
         }
     }
 

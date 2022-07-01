@@ -33,5 +33,25 @@ public class RevAcct {
 			amounts[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
 		}
 	}
+	
+	/*
+	 * Methods
+	 */
+	
+	/*
+	 * Calculate the total of the client
+	 */
+	public void calculateTotal() {
+		
+		for (int i = 0; i < 13; i++) {
+			
+			// initiate the totals to 0
+			amounts[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+			
+			for (Client c: clients.values()) {
+				amounts[i] = amounts[i].add(c.totals[i]);
+			}
+		}
+	}
 
 }
