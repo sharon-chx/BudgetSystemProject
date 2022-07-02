@@ -129,12 +129,12 @@ public abstract class Frame implements ActionListener{
 		
 		else if (e.getSource() == s3) {
 			frame.dispose();
-			new ViewClientRevByMediasFrame(bs);
+			new GetScenario_RevByMediaFrame(bs);
 		}
 		
 		else if (e.getSource() == s4) {
 			frame.dispose();
-			new ViewRevByAcctsFrame(bs);
+			new GetScenario_RevByAcctFrame(bs);
 		}
 		
 		else if (e.getSource() == s5) {

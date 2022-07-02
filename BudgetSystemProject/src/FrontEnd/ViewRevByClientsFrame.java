@@ -1,24 +1,26 @@
 package FrontEnd;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import BackEnd.*;
 
 public class ViewRevByClientsFrame extends DisplayFrame {
 	
-	Scenario s;
 	String[] clients;
+	String[][] data;
 
-	ViewRevByClientsFrame(BudgetSystem budgetSystem, Scenario scenario, String[] clients) {
+	ViewRevByClientsFrame(BudgetSystem budgetSystem, Scenario scenario, String[] cls) {
 		super(budgetSystem, scenario);
-		s = scenario;
-		clients = clients;
+		clients = cls;
 		
 		// set up label at the beginning
 		label = new JLabel("Result of Revenue by Clients:");
@@ -30,7 +32,7 @@ public class ViewRevByClientsFrame extends DisplayFrame {
 		
 		String[] columnNames = { "Client Name", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Total" };
 		
-		String[][] data = s.getClientsRev(clients);
+		data = s.getClientsRev(clients);
 		
 		table = new JTable(data, columnNames);
 		
@@ -42,7 +44,32 @@ public class ViewRevByClientsFrame extends DisplayFrame {
         table.setPreferredScrollableViewportSize(new Dimension(450,30));
         table.setFillsViewportHeight(true);
         panel.add(js);
+        
+        // add button for download data
+		button = new JButton("Export");
+		button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		panel.add(button);
+        button.addActionListener(this);
 		
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if (e.getSource() == button) {
+			
+			boolean result = s.exportCSV(data, "client");
+			
+			if (result == true) {
+				frame.dispose();
+				new SuccessFrame(bs);
+			}else {
+				frame.dispose();
+				new FailFrame(bs);
+			}
+			
+		}
 	}
 
 }

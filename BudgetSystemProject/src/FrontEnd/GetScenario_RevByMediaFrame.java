@@ -3,44 +3,15 @@ package FrontEnd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 import BackEnd.*;
 
-public class GetScenarioFrame extends Frame{
-	
-	JTextField tYear;
-	JTextField tScenario;
-	JLabel label2;
+public class GetScenario_RevByMediaFrame extends GetScenarioFrame implements ActionListener{
 
-	GetScenarioFrame(BudgetSystem budgetSystem) {
-		
+	GetScenario_RevByMediaFrame(BudgetSystem budgetSystem) {
 		super(budgetSystem);
-
-	    // set up the label and create a object of JTextField with 16 columns for year
-	    label = new JLabel("Year:");
-	    panel.add(label);
-
-        tYear = new JTextField(8);
-        panel.add(tYear);
-        
-     // set up the label and create a object of JTextField with 16 columns for scenario
-	    label2 = new JLabel("Scenario:");
-	    panel.add(label2);
-	    
-        tScenario = new JTextField(8);
-        panel.add(tScenario);
-        
-        // add button and ActionListener to button
-		button = new JButton("Submit");
-		panel.add(button);
-        button.addActionListener(this);	
 		
 	}
-	
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e)
     {
@@ -60,9 +31,9 @@ public class GetScenarioFrame extends Frame{
 
                     }else {
                         
-                    	// if valid scenario, go to the Upload Frame
+                    	// if valid scenario, go to the ChosseClient Frame
         				frame.dispose();
-        				new ChooseClientsFrame(bs, result);
+        				new ChooseClientFrame(bs, result);
                     }
                 }catch(Exception exc) {
                 	frame.dispose();
@@ -70,6 +41,5 @@ public class GetScenarioFrame extends Frame{
                 }	
         }
     }
-
 	
 }

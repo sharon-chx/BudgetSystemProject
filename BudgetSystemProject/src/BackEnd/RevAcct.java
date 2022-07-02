@@ -60,18 +60,23 @@ public class RevAcct {
 	 */
 	public HashMap<String, BigDecimal[]> getClientRev(String client, HashMap<String, BigDecimal[]> clientItem) {
 		
-		BigDecimal[] values = new BigDecimal[13];
+		if (client == null) return null;
+		
+		client = client.toLowerCase();
 		
 		if (clients.containsKey(client)) {
 			
-			// if client not in hash map, initiate the BigDecimal[]
-			if (!clientItem.containsKey(client)) {
+			BigDecimal[] values = clients.get(client).totals;
+			
+			// if client in hash map, and sum the values
+			if (clientItem.containsKey(client)) {
+
 				for (int i=0; i<13; i++) {
-					values[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+					values[i] = values[i].add(clientItem.get(client)[i]);
 				}
+				
 			}
 			
-			values = clients.get(client).totals;
 			clientItem.put(client, values);
 		}
 		

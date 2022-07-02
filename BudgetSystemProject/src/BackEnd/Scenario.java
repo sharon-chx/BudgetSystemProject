@@ -1,8 +1,10 @@
 package BackEnd;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -313,6 +315,7 @@ public class Scenario {
 			total[j] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
 		}
 		
+		int count = 0;
 		
 		// convert hashmap to String[][] and sum the total
 		for (Entry <String, BigDecimal[]> entry: clientItem.entrySet()) {
@@ -325,6 +328,9 @@ public class Scenario {
 				total[j] = total[j].add(num);
 				line[j+1] = num.toString();
 			}
+			
+			result[count] = line;
+			count++;
 		}
 		
 		// convert total to Sting[]
@@ -337,5 +343,183 @@ public class Scenario {
 		result[clients.length] = totalToString;
 		
 		return result;
+	}
+	
+	/*
+	 * Write the givein nested String list to a file in ordert to export
+	 */
+	public boolean exportCSV(String[][] data, String type) {
+		
+		try {
+			File f = new File("export.csv");
+			FileWriter fw = new FileWriter(f);
+			BufferedWriter bw = new BufferedWriter(fw);
+			
+			int columnLen = data[0].length;
+			
+			// write the Scenario on the first row
+			bw.write(year + " " + name);
+			bw.write("\n");
+			
+			String[] colName = { "Client Name", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Total" };
+			
+			// change column name for rev by media
+			if (type == "media") {
+				colName[0] = "Media Type";
+			}	
+			// change column name for rev by acct or for p&l
+			else if (type == "acct" || type == "p&l") {
+				colName[0] = "Account Number";
+			}
+			// change column name for expense by notes
+			else if (type == "note") {
+				colName[0] = "Notes";
+			}
+			
+			for (int i=0; i<colName.length; i++) {
+				bw.write(colName[i]);
+				bw.write(",");
+			}
+			bw.write("\n");
+			
+			// write data in following row
+			for (String[] line: data) {
+				for (int j=0; j<columnLen; j++) {
+					bw.write(line[j]);
+					bw.write(",");
+				}
+				bw.write("\n");
+			}
+			
+			bw.flush();
+			fw.close();
+			bw.close();
+			return true;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	
+	/*
+	 * Get rev by medias for given client
+	 */
+	public String[][] getMediaRev(String client) {
+		
+		String[][] result = new String[BudgetSystem.mediaTypes.size()+1][14];
+		
+		HashMap<String, BigDecimal[]> mediaItem = new HashMap<String, BigDecimal[]>();
+		
+		// update hashmap for medias and their value in different accounts
+		for (RevAcct revAcct: this.revAccts.values()) {
+			
+			// if the rev acct contains the Client
+			if (revAcct.clients.containsKey(client)) {
+				
+				Client c = revAcct.clients.get(client);
+				
+				for (String media: BudgetSystem.mediaTypes) {
+					mediaItem = c.getMediaMonthTotal(media, mediaItem);
+				}
+			}
+			
+		}
+		
+		// initiate the variable to store clients rev total
+		BigDecimal[] total = new BigDecimal[13];
+		for (int j = 0; j < 13; j++) {
+			total[j] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		}
+		
+		int count = 0;
+		
+		// convert hashmap to String[][] and sum the total
+		for (Entry <String, BigDecimal[]> entry: mediaItem.entrySet()) {
+			
+			String[] line = new String[14];
+			line[0] = entry.getKey();
+			
+			for (int j = 0; j < 13; j++) {
+				BigDecimal num = entry.getValue()[j];
+				total[j] = total[j].add(num);
+				line[j+1] = num.toString();
+			}
+			
+			result[count] = line;
+			count++;
+		}
+		
+		// convert total to Sting[]
+		String[] totalToString = new String[14];
+		totalToString[0] = "total rev:";
+		for (int j = 0; j < 13; j++) {
+			totalToString[j+1] = total[j].toString();
+		}
+		
+		result[BudgetSystem.mediaTypes.size()] = totalToString;
+		
+		return result;
+	
+	}
+
+
+	/*
+	 * Get rev by accounts for given client
+	 */
+	public String[][] getAcctRev(String client) {
+		
+		HashMap<Integer, BigDecimal[]> acctItem = new HashMap<Integer, BigDecimal[]>();
+		
+		// update hashmap for account and their value in different accounts
+		for (RevAcct revAcct: this.revAccts.values()) {
+			
+			// if the rev acct contains the Client
+			if (revAcct.clients.containsKey(client)) {
+				
+				Client c = revAcct.clients.get(client);
+				
+				acctItem.put(revAcct.number, c.totals);
+			}
+			
+		}
+		
+		// initiate the variable to store clients rev total
+		BigDecimal[] total = new BigDecimal[13];
+		for (int j = 0; j < 13; j++) {
+			total[j] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		}
+		
+		int count = 0;
+		String[][] result = new String[acctItem.size()+1][14];
+		
+		// convert hashmap to String[][] and sum the total
+		for (Entry <Integer, BigDecimal[]> entry: acctItem.entrySet()) {
+			
+			String[] line = new String[14];
+			line[0] = entry.getKey().toString();
+			
+			for (int j = 0; j < 13; j++) {
+				BigDecimal num = entry.getValue()[j];
+				total[j] = total[j].add(num);
+				line[j+1] = num.toString();
+			}
+			
+			result[count] = line;
+			count++;
+		}
+		
+		// convert total to Sting[]
+		String[] totalToString = new String[14];
+		totalToString[0] = "total rev:";
+		for (int j = 0; j < 13; j++) {
+			totalToString[j+1] = total[j].toString();
+		}
+		
+		result[count] = totalToString;
+		
+		return result;
+		
 	}
 }

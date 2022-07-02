@@ -46,16 +46,21 @@ public class ChooseClientsFrame extends Frame{
 		if (e.getSource() == button) {
 			
 			 int[] selectedIndex = list.getSelectedIndices();
-			 String[] clientList = new String[selectedIndex.length];
 			 
-			 for (int i = 0; i < selectedIndex.length; i++) {
-				 int num = selectedIndex[i];
-				 clientList[i] = (String) clients[num];
+			 if (selectedIndex.length == 0) {
+				 frame.dispose();
+				 new FailFrame(bs, "You didn't choose a client");
+			 }else {
+				 String[] clientList = new String[selectedIndex.length];
+				 
+				 for (int i = 0; i < selectedIndex.length; i++) {
+					 int num = selectedIndex[i];
+					 clientList[i] = (String) clients[num];
+				 }
+				 
+				 frame.dispose();
+				 new ViewRevByClientsFrame(bs, s, clientList);
 			 }
-			 
-			 frame.dispose();
-			 new ViewRevByClientsFrame(bs, s, clientList);
-			
 		}
 	}
 

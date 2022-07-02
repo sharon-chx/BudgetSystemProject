@@ -64,7 +64,8 @@ public class BudgetSystem {
 		this.addYear(BudgetSystem.startYear);
 		this.addScenario("FP");
 		this.addScenario("BUD");
-		this.addScenario("1RE");	
+		this.addScenario("1RE");
+		this.addScenario("ACTUAL");
 	}
 
 	

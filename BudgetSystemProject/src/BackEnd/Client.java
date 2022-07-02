@@ -2,6 +2,7 @@ package BackEnd;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 
@@ -60,6 +61,9 @@ public class Client {
 		
 		media = media.toLowerCase();
 		
+		// if media not exist, add it to static value as well
+		if (!BudgetSystem.mediaTypes.contains(media)) BudgetSystem.mediaTypes.add(media);
+		
 		this.amounts.put(media, amounts);
 		
 		this.calculateTotal();
@@ -112,5 +116,28 @@ public class Client {
 	}
 	
 
+	/*
+	 * get monthly amount of given media type and add to the given mediaItem hash map
+	 */
+	public HashMap<String, BigDecimal[]> getMediaMonthTotal(String media, HashMap<String, BigDecimal[]> mediaItem) {
+		
+		if (media == null || !amounts.containsKey(media.toLowerCase())) return null;
+		
+		media = media.toLowerCase();
+		
+		BigDecimal[] amt = amounts.get(media);
+		
+		// if media in hash map, and sum the values
+		if (mediaItem.containsKey(media)) {
+
+			for (int i=0; i<13; i++) {
+				amt[i] = amt[i].add(mediaItem.get(media)[i]);
+			}
+		}
+		
+		mediaItem.put(media, amt);
+		
+		return mediaItem;
+	}
 
 }

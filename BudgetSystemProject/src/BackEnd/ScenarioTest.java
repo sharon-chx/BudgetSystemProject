@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -121,7 +123,44 @@ class ScenarioTest {
 		HashSet<String> expect = new HashSet<String>();
 		expect.add("aldi");
 		expect.add("bmw");
+		expect.add("amazon");
+		expect.add("bloomin brand");
 		assertEquals(expect, s1.getClients());
+	}
+	
+	@Test
+	void testGetClientRev() {
+		File f = new File("test.csv");
+		
+		s1.upload(f);
+		
+		String[] clients = {"aldi", "bmw"};
+		
+		String[][] result = s1.getClientsRev(clients);
+		System.out.println("test get client rev:");
+		
+		for(int i = 0; i < result.length; i++) {
+			for (int j = 0; j < 14; j++) {
+				System.out.print(result[i][j] + ", ");
+			}
+			System.out.println();
+		}
+		
+		System.out.println("done!");
+	}
+	
+	
+	@Test
+	void testExportCSV() {
+		File f = new File("test.csv");
+		
+		s1.upload(f);
+		
+		String[] clients = {"aldi", "bmw"};
+		
+		String[][] result = s1.getClientsRev(clients);
+		
+		s1.exportCSV(result, "client");
 	}
 
 }
