@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map.Entry;
 
 
 public class Scenario {
@@ -246,7 +249,7 @@ public class Scenario {
 	/*
 	 * Update the Exp Acct by given acct number, note, and monthly amts
 	 */
-	private boolean updateExpAcct(int account, String note, BigDecimal[] amounts) {
+	public boolean updateExpAcct(int account, String note, BigDecimal[] amounts) {
 		
 		// check invalid inputs
 		if ( note == null || amounts == null || account >= 8000 || account <7000)
@@ -271,5 +274,68 @@ public class Scenario {
 	}
 	
 	
+	/*
+	 * Get the full client list
+	 */
+	public HashSet<String> getClients(){
+		
+		HashSet<String> clients = new HashSet<String>();
+		
+		for (RevAcct revAcct : this.revAccts.values()) {
+			clients.addAll(revAcct.clients.keySet());
+		}
+		
+		return clients;
+	}
 
+
+	/*
+	 * Get the monthly rev of given list of clients
+	 * Return nested list of String
+	 */
+	public String[][] getClientsRev(String[] clients) {
+		
+		String[][] result = new String[clients.length+1][14];
+		
+		HashMap<String, BigDecimal[]> clientItem = new HashMap<String, BigDecimal[]>();
+		
+		// update hashmap for given clients and its value in different accounts
+		for (RevAcct revAcct: this.revAccts.values()) {
+			for (String clientName: clients) {
+				clientItem = revAcct.getClientRev(clientName, clientItem);
+			}
+			
+		}
+		
+		// intitate the variable to store clients rev total
+		BigDecimal[] total = new BigDecimal[13];
+		for (int j = 0; j < 13; j++) {
+			total[j] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		}
+		
+		
+		// convert hashmap to String[][] and sum the total
+		for (Entry <String, BigDecimal[]> entry: clientItem.entrySet()) {
+			
+			String[] line = new String[14];
+			line[0] = entry.getKey();
+			
+			for (int j = 0; j < 13; j++) {
+				BigDecimal num = entry.getValue()[j];
+				total[j] = total[j].add(num);
+				line[j+1] = num.toString();
+			}
+		}
+		
+		// convert total to Sting[]
+		String[] totalToString = new String[14];
+		totalToString[0] = "total rev:";
+		for (int j = 0; j < 13; j++) {
+			totalToString[j+1] = total[j].toString();
+		}
+		
+		result[clients.length] = totalToString;
+		
+		return result;
+	}
 }

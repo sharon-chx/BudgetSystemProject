@@ -1,10 +1,14 @@
 package FrontEnd;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -12,23 +16,28 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import BackEnd.*;
 
-public abstract class Frame implements ActionListener{
-
+public abstract class DisplayFrame implements ActionListener{
+	
 	JFrame frame;
 	JPanel panel;
 	JButton button;
 	JLabel label;
 	JList list;
 	BudgetSystem bs;
+	Scenario s;
 	JMenuBar menuBar;
 	JMenu menu, subMenu1, subMenu2, subMenu3;
 	JMenuItem m1, m2, s1, s2, s3, s4, s5, s6, s7, s8;
+	JTable table;
+	JScrollPane js;
 	
-	Frame(BudgetSystem budgetSystem){
-		
+
+	DisplayFrame(BudgetSystem budgetSystem, Scenario scenario) {
 		
 		frame = new JFrame();
 		panel = new JPanel();
@@ -39,7 +48,6 @@ public abstract class Frame implements ActionListener{
 		//set name of the frame
 		frame.setTitle("Budget System");
 
-		
 		// set up the menu
 		menu = new JMenu("Menu");
 		subMenu1 = new JMenu("Get scenario info");
@@ -71,13 +79,10 @@ public abstract class Frame implements ActionListener{
 		subMenu2.add(s7);
 		subMenu2.add(s8);
 		menu.add(subMenu2);
-		
 
 		subMenu3.add(s6);
 		menu.add(subMenu3);
 
-
-		
 		// add ActionListener to menuItems
 		m1.addActionListener(this);
 		m2.addActionListener(this);
@@ -95,15 +100,19 @@ public abstract class Frame implements ActionListener{
 		frame.setJMenuBar(menuBar);
 		
 	    bs = budgetSystem;
-	    
-		// pack and show the this
+		
+		s=scenario;
+		
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+		panel.setLayout(boxlayout);
+		 
+        
 		frame.add(panel);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    frame.setSize(750, 750);
 	    frame.setVisible(true);
-		
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -156,7 +165,7 @@ public abstract class Frame implements ActionListener{
 			frame.dispose();
 			new GetScenario_DeleteExpFrame(bs);
 		}
+		
 	}
-	
-}
 
+}

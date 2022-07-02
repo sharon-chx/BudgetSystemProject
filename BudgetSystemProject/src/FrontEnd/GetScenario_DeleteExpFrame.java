@@ -3,15 +3,17 @@ package FrontEnd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import BackEnd.*;
+import BackEnd.BudgetSystem;
+import BackEnd.Scenario;
 
-public class GetScenario_UploadDataFrame extends GetScenarioFrame implements ActionListener{
+public class GetScenario_DeleteExpFrame extends GetScenarioFrame implements ActionListener{
 
-	GetScenario_UploadDataFrame(BudgetSystem budgetSystem) {
+	GetScenario_DeleteExpFrame(BudgetSystem budgetSystem) {
 		
 		super(budgetSystem);
 		
 	}
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -34,7 +36,7 @@ public class GetScenario_UploadDataFrame extends GetScenarioFrame implements Act
                         
                     	// if valid scenario, go to the Upload Frame
         				frame.dispose();
-        				new UploadFrame(bs, result);
+        				new FindExpFrame(bs, result);
                     }
                 }catch(Exception exc) {
                 	frame.dispose();
@@ -42,7 +44,5 @@ public class GetScenario_UploadDataFrame extends GetScenarioFrame implements Act
                 }	
         }
     }
-	
-	
 
 }

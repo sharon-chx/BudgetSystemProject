@@ -109,5 +109,38 @@ public class ExpAcct {
 	}
 
 
+	/*
+	 * Find the line item by given keyword, return the index number
+	 */
+	public int findItem(String note) {
+	
+		if (note == null) return -1;
+		
+		for (int i = 0; i < notes.size(); i++) {
+			if (notes.get(i).contains(note)) return i;
+		}
+		
+		return -1;
+	}
+
+
+
+	/*
+	 * Delete the line item by given index
+	 */
+	public boolean deleteItem(int index) {
+		
+		// check for invalid input
+		if (index < 0 || index >= items.size()) return false;
+		
+		// remove the note and amounts
+		items.remove(index);
+		notes.remove(index);
+		
+		return true;
+		
+	}
+	
+	
 
 }

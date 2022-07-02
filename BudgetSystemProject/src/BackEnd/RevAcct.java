@@ -2,6 +2,7 @@ package BackEnd;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 public class RevAcct {
@@ -52,6 +53,29 @@ public class RevAcct {
 				amounts[i] = amounts[i].add(c.totals[i]);
 			}
 		}
+	}
+
+	/*
+	 * Update the given HashMap based on the rev of given client
+	 */
+	public HashMap<String, BigDecimal[]> getClientRev(String client, HashMap<String, BigDecimal[]> clientItem) {
+		
+		BigDecimal[] values = new BigDecimal[13];
+		
+		if (clients.containsKey(client)) {
+			
+			// if client not in hash map, initiate the BigDecimal[]
+			if (!clientItem.containsKey(client)) {
+				for (int i=0; i<13; i++) {
+					values[i] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+				}
+			}
+			
+			values = clients.get(client).totals;
+			clientItem.put(client, values);
+		}
+		
+		return clientItem;
 	}
 
 }

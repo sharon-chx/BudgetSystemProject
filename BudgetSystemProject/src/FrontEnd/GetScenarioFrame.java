@@ -19,10 +19,6 @@ public class GetScenarioFrame extends Frame{
 		
 		super(budgetSystem);
 
-		// set the frame and panel
-		frame.setTitle("Get scenario");;
-
-		
 	    // set up the label and create a object of JTextField with 16 columns for year
 	    label = new JLabel("Year:");
 	    panel.add(label);

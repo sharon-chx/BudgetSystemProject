@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -108,6 +109,19 @@ class ScenarioTest {
 			System.out.println(expAcct.printAmt());
 		}
 		
+	}
+	
+	@Test
+	void testGetClients() {
+		// test upload on rev acct
+		File f = new File("test.csv");
+		
+		s1.upload(f);
+		
+		HashSet<String> expect = new HashSet<String>();
+		expect.add("aldi");
+		expect.add("bmw");
+		assertEquals(expect, s1.getClients());
 	}
 
 }
