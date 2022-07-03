@@ -1,14 +1,20 @@
 package BackEnd;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 
 
@@ -65,7 +71,7 @@ public class BudgetSystem {
 		this.addScenario("FP");
 		this.addScenario("BUD");
 		this.addScenario("1RE");
-		this.addScenario("ACTUAL");
+		this.addScenario("ACT");
 	}
 
 	
@@ -124,7 +130,7 @@ public class BudgetSystem {
 	/*
 	 * Get the index of given year and scenario
 	 */
-	protected int[] getIndex(int year, String scenario) {
+	public int[] getIndex(int year, String scenario) {
 		
 		// check if both given year and scenario is valid
 		if (scenario == null || scenario.length() > 3 || scenarios.size() <= year - BudgetSystem.startYear - 1 
@@ -157,4 +163,148 @@ public class BudgetSystem {
 	}
 
 
+	/*
+	 * Get the list of valid scenarios (scenario that not null)
+	 * Return the array list of String (the year and name of scenarios)
+	 */
+	public ArrayList<String> getScenarios() {
+		
+		ArrayList<String> result = new ArrayList<String>();
+		
+		// loop through scenarios to find non-null scenarios
+		for (int i = 0; i<scenarios.size(); i++) {
+			for (int j = 0; j<scenarioMapping.size(); j++) {
+				if (scenarios.get(i).get(j) != null) {
+					result.add(scenarios.get(i).get(j).year + " " + scenarios.get(i).get(j).name);
+				}
+			}
+		}
+		
+		return result;
+		
+	}
+
+
+	/*
+	 * Get the list of P&L of two scenarios 
+	 * Return the array list of String (the year and name of scenarios)
+	 */
+	public String[][] compareScenarios(Scenario[] items) {
+		
+		int size1 = items[0].revAccts.size()+items[0].expAccts.size();
+		
+		int size2 = items[1].revAccts.size()+items[1].expAccts.size();
+		
+		if (size1 < size2) return helper(items[1], items[0], 2);
+		else return helper(items[0], items[1], 1);
+	}
+	
+	/*
+	 * Helper function of compareScenarios function
+	 */
+	public String[][] helper(Scenario s1, Scenario s2, int compareFrom){
+		
+		int rowCount = s1.revAccts.size() + s1.expAccts.size() + 3;
+		String[][] result = new String[rowCount][4];
+		String[] line = new String[4];
+		
+		TreeMap<Integer, BigDecimal> p1 = s1.getPLTotal();
+		TreeMap<Integer, BigDecimal> p2 = s2.getPLTotal();
+		
+		int count = 0;
+		
+		// loop through every entry of tree map
+		for (Entry<Integer, BigDecimal> entry: p1.entrySet()) {
+			
+			int acctN = entry.getKey();
+			
+			if (acctN == 6999) line[0] = "total rev:";
+			else if (acctN == 7999) line[0] = "total exp:";
+			else if (acctN == 8999) line[0] = "net income:";
+			else line[0] = Integer.toString(acctN);
+			
+			BigDecimal total1 = entry.getValue();
+			BigDecimal total2 = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+			BigDecimal variance = total1;
+			
+			// if compare from is 1, s1 will be in column 2, and s2 will be in column3
+			if (compareFrom == 1) {
+				
+				line[1] = total1.toString();
+
+				// if p2 also has this acct, reassign total2
+				if (p2.containsKey(acctN)) {
+					total2 = p2.get(acctN);
+				}
+				
+				line[2] = total2.toString();
+				
+				if ((acctN < 7000 || acctN >= 8000)) line[3] = total1.add(total2.negate()).toString();
+				else line[3] = total2.add(total1.negate()).toString();
+				
+			}
+			// if compare from is 2, s2 will be in column 2, and s1 will be in column 3
+			else if (compareFrom == 2){
+				line[2] = total1.toString();
+
+				// if p2 also has this acct, reassign total2
+				if (p2.containsKey(acctN)) {
+					total2 = p2.get(acctN);
+				}
+				
+				line[1] = total2.toString();
+				
+				if ((acctN < 7000 || acctN >= 8000)) line[3] = total2.add(total1.negate()).toString();
+				else line[3] = total1.add(total2.negate()).toString();
+			}
+			
+			result[count] = line.clone();
+			count ++;
+		}
+		
+		return result;
+		
+	}
+
+
+	public boolean exportCSV(String[][] data, String scenario1, String scenario2) {
+		
+		try {
+			File f = new File("export.csv");
+			FileWriter fw = new FileWriter(f);
+			BufferedWriter bw = new BufferedWriter(fw);
+			
+			int columnLen = data[0].length;
+			
+			// write the Scenario on the first row
+			bw.write("p&l comparison between " + scenario1 + " and " + scenario2);
+			bw.write("\n");
+			
+			String[] colName = { "Account", scenario1, scenario2, "Variance B/(W)" };
+			
+			for (int i=0; i<colName.length; i++) {
+				bw.write(colName[i]);
+				bw.write(",");
+			}
+			bw.write("\n");
+			
+			// write data in following row
+			for (String[] line: data) {
+				for (int j=0; j<columnLen; j++) {
+					bw.write(line[j]);
+					bw.write(",");
+				}
+				bw.write("\n");
+			}
+			
+			bw.flush();
+			fw.close();
+			bw.close();
+			return true;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

@@ -1,12 +1,124 @@
 package FrontEnd;
 
-import BackEnd.BudgetSystem;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 
-public class ViewExpByNotesFrame extends Frame {
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
-	ViewExpByNotesFrame(BudgetSystem budgetSystem) {
-		super(budgetSystem);
-		// TODO Auto-generated constructor stub
+import BackEnd.*;
+
+public class ViewExpByNotesFrame extends DisplayFrame {
+	
+	ExpAcct expA;
+	String[][] data;
+
+	ViewExpByNotesFrame(BudgetSystem budgetSystem, Scenario scenario, int acctNo) {
+		super(budgetSystem, scenario);
+		
+		expA = s.expAccts.get(acctNo);
+		
+		// set up label at the beginning
+		label = new JLabel("Result of Expense Account by Notes for Acct " + expA.number + ":");
+		label.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		panel.add(label);
+		
+		// create some empty space between different elements
+		panel.add(Box.createRigidArea(new Dimension(0, 10))); 
+		
+		String[] columnNames = { "Notes", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Total" };
+		
+		data = expA.getItems();
+		
+		table = new JTable(data, columnNames);
+		
+		table.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        JScrollPane js=new JScrollPane(table);
+        js.setVisible(true);
+        js.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        table.setPreferredScrollableViewportSize(new Dimension(450,30));
+        table.setFillsViewportHeight(true);
+        panel.add(js);
+        
+        // add button for download data
+		button = new JButton("Export");
+		button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		panel.add(button);
+        button.addActionListener(this);
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if (e.getSource() == button) {
+			
+			boolean result = s.exportCSV(data, "note", "Expense Account " + expA.number);
+			
+			if (result == true) {
+				frame.dispose();
+				new SuccessFrame(bs);
+			}else {
+				frame.dispose();
+				new FailFrame(bs);
+			}
+			
+		}
+		
+		else if (e.getSource() == m1) {
+			frame.dispose();
+			new AddNewYearFrame(bs);
+		}
+		
+		else if (e.getSource() == m2) {
+			frame.dispose();
+			new AddNewScenarioFrame(bs);
+		}
+		
+		else if (e.getSource() == s1) {
+			frame.dispose();
+			new GetScenario_plFrame(bs);
+		}
+		
+		else if (e.getSource() == s2) {
+			frame.dispose();
+			new GetScenario_RevByClientFrame(bs);
+		}
+		
+		else if (e.getSource() == s3) {
+			frame.dispose();
+			new GetScenario_RevByMediaFrame(bs);
+		}
+		
+		else if (e.getSource() == s4) {
+			frame.dispose();
+			new GetScenario_RevByAcctFrame(bs);
+		}
+		
+		else if (e.getSource() == s5) {
+			frame.dispose();
+			new GetScenario_ExpFrame(bs);
+		}
+		
+		else if (e.getSource() == s6) {
+			frame.dispose();
+			new GetScenario_twoScenarioFrame(bs);
+		}
+		
+		else if (e.getSource() == s7) {
+			frame.dispose();
+			new GetScenario_UploadDataFrame(bs);
+		}
+		
+		else if (e.getSource() == s8) {
+			frame.dispose();
+			new GetScenario_DeleteExpFrame(bs);
+		}
 	}
 
 }

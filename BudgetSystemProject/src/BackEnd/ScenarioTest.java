@@ -160,7 +160,7 @@ class ScenarioTest {
 		
 		String[][] result = s1.getClientsRev(clients);
 		
-		s1.exportCSV(result, "client");
+		s1.exportCSV(result, "client", "");
 	}
 
 }

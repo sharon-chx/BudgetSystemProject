@@ -57,7 +57,7 @@ public class ViewClientRevByMediasFrame extends DisplayFrame{
 		
 		if (e.getSource() == button) {
 			
-			boolean result = s.exportCSV(data, "media");
+			boolean result = s.exportCSV(data, "media", "Client " + client);
 			
 			if (result == true) {
 				frame.dispose();
@@ -67,6 +67,56 @@ public class ViewClientRevByMediasFrame extends DisplayFrame{
 				new FailFrame(bs);
 			}
 			
+		}
+		
+		else if (e.getSource() == m1) {
+			frame.dispose();
+			new AddNewYearFrame(bs);
+		}
+		
+		else if (e.getSource() == m2) {
+			frame.dispose();
+			new AddNewScenarioFrame(bs);
+		}
+		
+		else if (e.getSource() == s1) {
+			frame.dispose();
+			new GetScenario_plFrame(bs);
+		}
+		
+		else if (e.getSource() == s2) {
+			frame.dispose();
+			new GetScenario_RevByClientFrame(bs);
+		}
+		
+		else if (e.getSource() == s3) {
+			frame.dispose();
+			new GetScenario_RevByMediaFrame(bs);
+		}
+		
+		else if (e.getSource() == s4) {
+			frame.dispose();
+			new GetScenario_RevByAcctFrame(bs);
+		}
+		
+		else if (e.getSource() == s5) {
+			frame.dispose();
+			new GetScenario_ExpFrame(bs);
+		}
+		
+		else if (e.getSource() == s6) {
+			frame.dispose();
+			new GetScenario_twoScenarioFrame(bs);
+		}
+		
+		else if (e.getSource() == s7) {
+			frame.dispose();
+			new GetScenario_UploadDataFrame(bs);
+		}
+		
+		else if (e.getSource() == s8) {
+			frame.dispose();
+			new GetScenario_DeleteExpFrame(bs);
 		}
 	}
 

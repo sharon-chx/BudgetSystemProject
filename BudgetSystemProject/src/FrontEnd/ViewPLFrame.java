@@ -1,12 +1,121 @@
 package FrontEnd;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
 import BackEnd.*;
 
-public class ViewPLFrame extends Frame{
+public class ViewPLFrame extends DisplayFrame{
+	
+	String[][] data;
 
-	ViewPLFrame(BudgetSystem budgetSystem) {
-		super(budgetSystem);
-		// TODO Auto-generated constructor stub
+	ViewPLFrame(BudgetSystem budgetSystem, Scenario scenario) {
+		super(budgetSystem, scenario);
+		
+		// set up label at the beginning
+		label = new JLabel("Result of P&L:");
+		label.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		panel.add(label);
+		
+		// create some empty space between different elements
+		panel.add(Box.createRigidArea(new Dimension(0, 10))); 
+		
+		String[] columnNames = { "Account Number", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Total" };
+		
+		data = s.getPL();
+		
+		table = new JTable(data, columnNames);
+		
+		table.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        JScrollPane js=new JScrollPane(table);
+        js.setVisible(true);
+        js.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        table.setPreferredScrollableViewportSize(new Dimension(450,30));
+        table.setFillsViewportHeight(true);
+        panel.add(js);
+        
+        // add button for download data
+		button = new JButton("Export");
+		button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		panel.add(button);
+        button.addActionListener(this);
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if (e.getSource() == button) {
+			
+			boolean result = s.exportCSV(data, "p&l", "p&l");
+			
+			if (result == true) {
+				frame.dispose();
+				new SuccessFrame(bs);
+			}else {
+				frame.dispose();
+				new FailFrame(bs);
+			}
+			
+		}
+		
+		else if (e.getSource() == m1) {
+			frame.dispose();
+			new AddNewYearFrame(bs);
+		}
+		
+		else if (e.getSource() == m2) {
+			frame.dispose();
+			new AddNewScenarioFrame(bs);
+		}
+		
+		else if (e.getSource() == s1) {
+			frame.dispose();
+			new GetScenario_plFrame(bs);
+		}
+		
+		else if (e.getSource() == s2) {
+			frame.dispose();
+			new GetScenario_RevByClientFrame(bs);
+		}
+		
+		else if (e.getSource() == s3) {
+			frame.dispose();
+			new GetScenario_RevByMediaFrame(bs);
+		}
+		
+		else if (e.getSource() == s4) {
+			frame.dispose();
+			new GetScenario_RevByAcctFrame(bs);
+		}
+		
+		else if (e.getSource() == s5) {
+			frame.dispose();
+			new GetScenario_ExpFrame(bs);
+		}
+		
+		else if (e.getSource() == s6) {
+			frame.dispose();
+			new GetScenario_twoScenarioFrame(bs);
+		}
+		
+		else if (e.getSource() == s7) {
+			frame.dispose();
+			new GetScenario_UploadDataFrame(bs);
+		}
+		
+		else if (e.getSource() == s8) {
+			frame.dispose();
+			new GetScenario_DeleteExpFrame(bs);
+		}
 	}
 
 }

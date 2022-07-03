@@ -3,6 +3,7 @@ package BackEnd;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class ExpAcct {
@@ -139,6 +140,44 @@ public class ExpAcct {
 		
 		return true;
 		
+	}
+
+
+	/*
+	 * Get line items of the Expense Account
+	 */
+	public String[][] getItems() {
+		
+		int count = 0;
+		String[][] result = new String[items.size()+1][14];
+		
+		// add the key and value of items to result
+		for (int i = 0 ; i< items.size(); i++) {
+			
+			String[] line = new String[14];
+			line[0] = notes.get(i);
+			
+			BigDecimal[] nums = items.get(i);
+			
+			for (int j = 0; j < 13; j++) {
+				BigDecimal num = nums[i];
+				line[j+1] = num.toString();
+			}
+			
+			result[count] = line;
+			count++;
+		}
+		
+		// convert total to Sting[]
+		String[] totalToString = new String[14];
+		totalToString[0] = "expense total:";
+		for (int j = 0; j < 13; j++) {
+			totalToString[j+1] = amounts[j].toString();
+		}
+		
+		result[count] = totalToString;
+		
+		return result;
 	}
 	
 	

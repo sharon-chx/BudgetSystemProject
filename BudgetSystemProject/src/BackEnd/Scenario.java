@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 
 public class Scenario {
@@ -348,7 +349,7 @@ public class Scenario {
 	/*
 	 * Write the givein nested String list to a file in ordert to export
 	 */
-	public boolean exportCSV(String[][] data, String type) {
+	public boolean exportCSV(String[][] data, String type, String note) {
 		
 		try {
 			File f = new File("export.csv");
@@ -358,7 +359,7 @@ public class Scenario {
 			int columnLen = data[0].length;
 			
 			// write the Scenario on the first row
-			bw.write(year + " " + name);
+			bw.write(year + " " + name + " " + note);
 			bw.write("\n");
 			
 			String[] colName = { "Client Name", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Total" };
@@ -520,6 +521,132 @@ public class Scenario {
 		result[count] = totalToString;
 		
 		return result;
+		
+	}
+
+
+	/*
+	 * Get all accounts 
+	 */
+	public String[][] getPL() {
+
+		
+		
+		// initiate the variable to store clients rev total
+		BigDecimal[] revTotal = new BigDecimal[13];
+		for (int j = 0; j < 13; j++) {
+			revTotal[j] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		}
+		
+		int count = 0;
+		String[][] result = new String[revAccts.size()+expAccts.size()+3][14];
+		
+		// add the rev number, and monthly rev amount to result
+		for (RevAcct revAcct: this.revAccts.values()) {
+			
+			String[] line = new String[14];
+			line[0] = Integer.toString(revAcct.number);
+			
+			for (int j = 0; j < 13; j++) {
+				BigDecimal num = revAcct.amounts[j];
+				revTotal[j] = revTotal[j].add(num);
+				line[j+1] = num.toString();
+			}
+			
+			result[count] = line;
+			count++;	
+		}
+		
+		// convert rev total to Sting[]
+		String[] totalToString = new String[14];
+		totalToString[0] = "total rev:";
+		for (int j = 0; j < 13; j++) {
+			totalToString[j+1] = revTotal[j].toString();
+		}
+		
+		result[count] = totalToString;
+		count++;
+		
+		// initiate the variable to store exp total
+		BigDecimal[] expTotal = new BigDecimal[13];
+		for (int j = 0; j < 13; j++) {
+			expTotal[j] = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		}
+		
+		// add the exp number, and monthly rev amount to result
+		for (ExpAcct expAcct: this.expAccts.values()) {
+			
+			String[] line = new String[14];
+			line[0] = Integer.toString(expAcct.number);
+			
+			for (int j = 0; j < 13; j++) {
+				BigDecimal num = expAcct.amounts[j];
+				expTotal[j] = expTotal[j].add(num);
+				line[j+1] = num.toString();
+			}
+			
+			result[count] = line;
+			count++;	
+		}
+		
+		// convert exp total to Sting[]
+		String[] totalToString2 = new String[14];
+		totalToString2[0] = "total exp:";
+		for (int j = 0; j < 13; j++) {
+			totalToString2[j+1] = expTotal[j].toString();
+		}
+		
+		result[count] = totalToString2;
+		count++;
+		
+		String[] totalToString3 = new String[14];
+		totalToString3[0] = "net income:";
+		
+		// calculate net rev
+		for (int j = 0; j < 13; j++) {
+			revTotal[j] = revTotal[j].add(expTotal[j].negate());
+			totalToString3[j+1] = revTotal[j].toString();
+		}
+		
+		result[count] = totalToString3;
+		
+		return result;
+		
+	}
+	
+	
+	public TreeMap<Integer, BigDecimal> getPLTotal(){
+		
+		TreeMap<Integer, BigDecimal> acctMap = new TreeMap<Integer, BigDecimal>();
+		
+		// initiate the variable to store clients rev total
+		BigDecimal revTotal = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		
+		// add the rev number, and rev total to acctMap
+		for (RevAcct revAcct: this.revAccts.values()) {
+			acctMap.put(revAcct.number, revAcct.amounts[12]);
+			revTotal = revTotal.add(revAcct.amounts[12]);
+		}
+		
+		// put revTotal to acctMap
+		acctMap.put(6999, revTotal);
+		
+		// initiate the variable to store exp total
+		BigDecimal expTotal = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+		
+		// add the exp number, and monthly rev amount to result
+		for (ExpAcct expAcct: this.expAccts.values()) {
+			acctMap.put(expAcct.number, expAcct.amounts[12]);
+			expTotal = expTotal.add(expAcct.amounts[12]);	
+		}
+		
+		// put expTotal to acctMap
+		acctMap.put(7999, expTotal);
+		
+		// pub net income to acctMap
+		acctMap.put(8999, revTotal.add(expTotal.negate()));
+		
+		return acctMap;
 		
 	}
 }

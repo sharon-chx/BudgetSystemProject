@@ -3,42 +3,16 @@ package FrontEnd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import BackEnd.BudgetSystem;
+import BackEnd.Scenario;
 
-import BackEnd.*;
+public class GetScenario_ExpFrame extends GetScenarioFrame implements ActionListener{
 
-public class GetScenarioFrame extends Frame{
-	
-	JTextField tYear;
-	JTextField tScenario;
-	JLabel label2;
-
-	GetScenarioFrame(BudgetSystem budgetSystem) {
-		
+	GetScenario_ExpFrame(BudgetSystem budgetSystem) {
 		super(budgetSystem);
-
-	    // set up the label and create a object of JTextField with 16 columns for year
-	    label = new JLabel("Year:");
-	    panel.add(label);
-
-        tYear = new JTextField(8);
-        panel.add(tYear);
-        
-        // set up the label and create a object of JTextField with 16 columns for scenario
-	    label2 = new JLabel("Scenario:");
-	    panel.add(label2);
-	    
-        tScenario = new JTextField(8);
-        panel.add(tScenario);
-        
-		button = new JButton("Submit");
-		panel.add(button);
-        button.addActionListener(this);
+		
 	}
-	
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e)
     {
@@ -60,7 +34,7 @@ public class GetScenarioFrame extends Frame{
                         
                     	// if valid scenario, go to the Upload Frame
         				frame.dispose();
-        				new ChooseClientsFrame(bs, result);
+        				new FindExpFrame(bs, result);
                     }
                 }catch(Exception exc) {
                 	frame.dispose();
@@ -118,6 +92,5 @@ public class GetScenarioFrame extends Frame{
 			new GetScenario_DeleteExpFrame(bs);
 		}
     }
-
 	
 }
