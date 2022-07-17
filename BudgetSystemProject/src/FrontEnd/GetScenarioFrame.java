@@ -14,10 +14,15 @@ public class GetScenarioFrame extends Frame{
 	JTextField tYear;
 	JTextField tScenario;
 	JLabel label2;
+	//source{1: View P&L; 2: View revenue by clients; 3: View client's revenue by media type; 4: View client's revenue by account
+	// 		5: View expense detail; 7: Upload data; 8: Delete expense item}
+	int sourceCode;
 
-	GetScenarioFrame(BudgetSystem budgetSystem) {
+	GetScenarioFrame(BudgetSystem budgetSystem, int s) {
 		
 		super(budgetSystem);
+		
+		this.sourceCode = s;
 
 	    // set up the label and create a object of JTextField with 16 columns for year
 	    label = new JLabel("Year:");
@@ -60,7 +65,15 @@ public class GetScenarioFrame extends Frame{
                         
                     	// if valid scenario, go to the Upload Frame
         				frame.dispose();
-        				new ChooseClientsFrame(bs, result);
+        				
+        				// get to following frame based on source code
+        				if (sourceCode == 1) new ViewPLFrame(bs, result);
+        				else if (sourceCode == 2) new ChooseClientsFrame(bs, result);
+        				else if (sourceCode == 3) new ChooseClientFrame(bs, result);
+        				else if (sourceCode == 4) new ChooseClient_AcctFrame(bs, result);
+        				else if (sourceCode == 5) new FindExpFrame(bs, result);
+        				else if (sourceCode == 7) new UploadFrame(bs, result);
+        				else if (sourceCode == 8) new FindExpNoteFrame(bs, result);
                     }
                 }catch(Exception exc) {
                 	frame.dispose();
@@ -80,27 +93,27 @@ public class GetScenarioFrame extends Frame{
 		
 		else if (e.getSource() == s1) {
 			frame.dispose();
-			new GetScenario_plFrame(bs);
+			new GetScenarioFrame(bs, 1);
 		}
 		
 		else if (e.getSource() == s2) {
 			frame.dispose();
-			new GetScenario_RevByClientFrame(bs);
+			new GetScenarioFrame(bs, 2);
 		}
 		
 		else if (e.getSource() == s3) {
 			frame.dispose();
-			new GetScenario_RevByMediaFrame(bs);
+			new GetScenarioFrame(bs, 3);
 		}
 		
 		else if (e.getSource() == s4) {
 			frame.dispose();
-			new GetScenario_RevByAcctFrame(bs);
+			new GetScenarioFrame(bs, 4);
 		}
 		
 		else if (e.getSource() == s5) {
 			frame.dispose();
-			new GetScenario_ExpFrame(bs);
+			new GetScenarioFrame(bs, 5);
 		}
 		
 		else if (e.getSource() == s6) {
@@ -110,12 +123,12 @@ public class GetScenarioFrame extends Frame{
 		
 		else if (e.getSource() == s7) {
 			frame.dispose();
-			new GetScenario_UploadDataFrame(bs);
+			new GetScenarioFrame(bs, 7);
 		}
 		
 		else if (e.getSource() == s8) {
 			frame.dispose();
-			new GetScenario_DeleteExpFrame(bs);
+			new GetScenarioFrame(bs, 8);
 		}
     }
 

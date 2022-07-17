@@ -88,7 +88,7 @@ public class DeleteExpFrame extends DisplayFrame implements ActionListener {
 			
 		}
 		
-		else if (e.getSource() == m1) {
+        else if (e.getSource() == m1) {
 			frame.dispose();
 			new AddNewYearFrame(bs);
 		}
@@ -100,27 +100,27 @@ public class DeleteExpFrame extends DisplayFrame implements ActionListener {
 		
 		else if (e.getSource() == s1) {
 			frame.dispose();
-			new GetScenario_plFrame(bs);
+			new GetScenarioFrame(bs, 1);
 		}
 		
 		else if (e.getSource() == s2) {
 			frame.dispose();
-			new GetScenario_RevByClientFrame(bs);
+			new GetScenarioFrame(bs, 2);
 		}
 		
 		else if (e.getSource() == s3) {
 			frame.dispose();
-			new GetScenario_RevByMediaFrame(bs);
+			new GetScenarioFrame(bs, 3);
 		}
 		
 		else if (e.getSource() == s4) {
 			frame.dispose();
-			new GetScenario_RevByAcctFrame(bs);
+			new GetScenarioFrame(bs, 4);
 		}
 		
 		else if (e.getSource() == s5) {
 			frame.dispose();
-			new GetScenario_ExpFrame(bs);
+			new GetScenarioFrame(bs, 5);
 		}
 		
 		else if (e.getSource() == s6) {
@@ -130,12 +130,12 @@ public class DeleteExpFrame extends DisplayFrame implements ActionListener {
 		
 		else if (e.getSource() == s7) {
 			frame.dispose();
-			new GetScenario_UploadDataFrame(bs);
+			new GetScenarioFrame(bs, 7);
 		}
 		
 		else if (e.getSource() == s8) {
 			frame.dispose();
-			new GetScenario_DeleteExpFrame(bs);
+			new GetScenarioFrame(bs, 8);
 		}
 	}
 
