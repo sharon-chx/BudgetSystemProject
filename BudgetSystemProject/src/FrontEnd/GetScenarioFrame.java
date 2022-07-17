@@ -69,8 +69,8 @@ public class GetScenarioFrame extends Frame{
         				// get to following frame based on source code
         				if (sourceCode == 1) new ViewPLFrame(bs, result);
         				else if (sourceCode == 2) new ChooseClientsFrame(bs, result);
-        				else if (sourceCode == 3) new ChooseClientFrame(bs, result);
-        				else if (sourceCode == 4) new ChooseClient_AcctFrame(bs, result);
+        				else if (sourceCode == 3) new ChooseClientFrame(bs, result, 1);
+        				else if (sourceCode == 4) new ChooseClientFrame(bs, result, 2);
         				else if (sourceCode == 5) new FindExpFrame(bs, result);
         				else if (sourceCode == 7) new UploadFrame(bs, result);
         				else if (sourceCode == 8) new FindExpNoteFrame(bs, result);

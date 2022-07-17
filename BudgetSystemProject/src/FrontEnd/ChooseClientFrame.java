@@ -8,9 +8,14 @@ import javax.swing.ListSelectionModel;
 import BackEnd.*;
 
 public class ChooseClientFrame extends ChooseClientsFrame{
+	
+	// {1: view client rev by medias; 2: view rev by accounts}
+	int sourceCode;
+	
 
-	public ChooseClientFrame(BudgetSystem budgetSystem, Scenario scenario) {
+	public ChooseClientFrame(BudgetSystem budgetSystem, Scenario scenario, int code) {
 		super(budgetSystem, scenario);
+		this.sourceCode = code;
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		label = new JLabel("Choose one client:");
 	}
@@ -31,7 +36,8 @@ public class ChooseClientFrame extends ChooseClientsFrame{
 				 String selectedClient = (String) clients[selectedIndex];
 				 
 				 frame.dispose();
-				 new ViewClientRevByMediasFrame(bs, s, selectedClient);
+				 if (sourceCode == 1) new ViewClientRevByMediasFrame(bs, s, selectedClient);
+				 else if (sourceCode == 2) new ViewRevByAcctsFrame(bs, s, selectedClient);
 			 }
 		}
 		
