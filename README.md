@@ -5,27 +5,27 @@ Inspired by the business challenge that I'm facing when working as a financial a
 Check out the video demo here: https://youtu.be/tdt8l3-bA60
 
 Menus & Functions:
-1. Add new Year	
-2. Add new scenario	
+1. Add A New Year	
+2. Add A New Scenario	
 3. Get Scenario Info	
 
-	A. view P&L
+	A. View P&L
 	
-	B. view Rev by Selected Clients
+	B. View Revenue of Selected Clients
 	
-	C. view Client rev by media type
+	C. View Client Revenue By Media Types
 	
-	D. view Client rev by acct
+	D. View Client Revenue by General Ledger Account
 	
-	E. view Exp acct with notes
+	E. View Expense Accoount With Notes
 	
 4. Edit Scenario	
 
-	A. upload data
+	A. Upload Data From A CSV File
 	
-	B. delete an expense entry
+	B. Delete An Expense Entry
 	
 5. Compare Scenarios	
 
-	A. compare P&L of two scenarios
+	A. Compare P&L Of Two Scenarios
 
