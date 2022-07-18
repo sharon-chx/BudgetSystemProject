@@ -17,7 +17,8 @@ public class ChooseClientFrame extends ChooseClientsFrame{
 		super(budgetSystem, scenario);
 		this.sourceCode = code;
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		label = new JLabel("Choose one client:");
+		label.setText("Choose one client:");
+		
 	}
 
 	
