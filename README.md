@@ -21,9 +21,9 @@ Menus & Functions:
 
 	A. upload data
 	
-	B. edit an entry
+	B. delete an expense entry
 	
 5. Compare Scenarios	
 
-	A. compare P&L
+	A. compare P&L of two scenarios
 
