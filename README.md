@@ -2,7 +2,7 @@
 
 Inspired by the business challenge that I'm facing when working as a financial analyst: having many Excel files of P&L for different scenarios. So I implemented this software project using Java to manage and compare budget scenarios.
 
-Check out the video demo here: https://youtu.be/YR8FlZ83qAc
+<\b>Check out the video demo here: https://youtu.be/YR8FlZ83qAc  <\b>
 
 Menus & Functions:
 1. Add A New Year	
